@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Irrigator Manuel</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"></link>
+        
+    </head>
+    <body>
+        <div class="main">
+
+            <div class="menu">
+
+                <a href="{{ url_for('index') }}">Home &#9751;</a>
+                <a href="{{ url_for('forecast') }}">Current Forecast &#9728;</a>
+                <a href="{{ url_for('settings') }}">Settings &#9881;</a>
+                <a href="{{ url_for('override') }}">Water Now &#9730;</a>
+
+            </div>
+
+            <div class="body">
+
+                <h2><u>WARNING: Are you sure you really wish to water the plant?</u></h2>
+                <br>
+                <h3>The plant is currently moistured at x%</h3>
+                <h3>The treshold for watering is curently set at y%</h3>
+
+                    <br>
+                    <br>
+                    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                    <script type=text/javascript>
+                        $(function() {
+                          $('a#test').on('click', function(e) {
+                            e.preventDefault()
+                            $.getJSON('/background_process_test',
+                                function(data) {
+                              //do nothing
+                            });
+                            return false;
+                          });
+                        });
+                    </script>
+
+                    <div class='container'>
+                            <form>
+                                <a href=# id=test><button class="button button1" style="height:300px; width:300px; cursor: pointer;"><b>H</b><sub><b>2</b></sub><b>O</b></button></a>
+                            </form>
+                    
+                    </div>
+
+            </div>
+
+        </div>
+        
+    </body>
+</html>
