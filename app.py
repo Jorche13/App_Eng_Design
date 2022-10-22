@@ -1,5 +1,8 @@
+from warnings import catch_warnings
 from flask import Flask, render_template, url_for, request, redirect
 import os
+import weather  # This is the import for the weather module
+from dateutil import tz  # Time zone utility
 
 UPLOAD_FOLDER = os.path.join('static', 'css')
 
@@ -14,6 +17,19 @@ def index():
 
 @app.route('/forecast')
 def forecast():
+    try:
+        data = weather.WeatherAPI(
+            'Eindhoven', '2096fe218663d046a3a37855c4aea57f')
+    except (ValueError, ConnectionError):
+        # These are the two errors that can be raised by the weather constructor
+        # You could also return a error page here in the case something goes wrong
+        # I also hardcoded the data here but you can make it with user input
+        # I also tire to document it as much as possible so just reference the popups in VSCode
+        # or go to the weather.py file and check the docstrings
+
+        # return render_template('error.html')
+        pass
+    
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'latest_forecast.png')
     return render_template('forecast.html', user_image = full_filename)
 
@@ -33,9 +49,10 @@ def set_treshold():
 @app.route('/display', methods = ['GET'])
 def display():
     string_from_jojo = request.get_data()
+    print(string_from_jojo)
     return render_template('settings.html', string_from_jojo=string_from_jojo)
 
-#accesses the override webpage
+#accesses the override webpage - should be an okay html template
 @app.route('/override')
 def override():
     #if request.method == 'POST':
@@ -59,6 +76,8 @@ def background_process_test():
 #@app.route('/static/css/latest_forecast.png')
 #def latest_event():
     #return send_from_directory(os.path.join(app.root_path, 'static'), 'latest_forecast.png', mimetype='image/png')
+
+app.run(host = '0.0.0.0', port = 5000)
 
 if __name__ == "__main__":
     app.run(debug = True)
