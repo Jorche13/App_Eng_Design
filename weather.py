@@ -20,6 +20,14 @@ class DataPoint:
     rain_last_hour: float
     rain_three_hours: float
 
+    def get_temp(self):
+        rt = self.temp
+        return rt
+    
+    def get_rain_three_hours(self): 
+        rt = self.rain_three_hours
+        return rt
+
     def __init__(self, json: Dict[str, Any]) -> None:
         """Not all of the attributes are always present in the data.
         The attributes that are not present are set to empty values.
