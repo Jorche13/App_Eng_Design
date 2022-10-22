@@ -15,7 +15,6 @@ def waternow(timer):
 
 def run():
 
-
     while(1):
 
         b = DataPoint()
@@ -26,7 +25,7 @@ def run():
             print("Your plants are moist <3")
         
         #make thread sleep for five minutes 
-        time.sleep(5)
+        time.sleep(300)
 
 
 #deciding wheter plants need water
