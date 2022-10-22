@@ -1,58 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Irrigator Manuel</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"></link>
-        
-    </head>
-    <body>
-        <div class="main">
+{% extends "base.html" %}
 
-            <div class="menu">
+{% block body %}
+{{ super() }}
 
-                <a href="{{ url_for('index') }}">Home &#9751;</a>
-                <a href="{{ url_for('forecast') }}">Current Forecast &#9728;</a>
-                <a href="{{ url_for('settings') }}">Settings &#9881;</a>
-                <a href="{{ url_for('override') }}">Water Now &#9730;</a>
+<div class="d-flex flex-column h-100">
+  <h1>Manual Control</h1>
 
-            </div>
-
-            <div class="body">
-
-                <h2><u>WARNING: Are you sure you really wish to water the plant?</u></h2>
-                <br>
-                <h3>The plant is currently moistured at x%</h3>
-                <h3>The treshold for watering is curently set at y%</h3>
-
-                    <br>
-                    <br>
-                    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-                    <script type=text/javascript>
-                        $(function() {
-                          $('a#test').on('click', function(e) {
-                            e.preventDefault()
-                            $.getJSON('/background_process_test',
-                                function(data) {
-                              //do nothing
-                            });
-                            return false;
-                          });
-                        });
-                    </script>
-
-                    <div class='container'>
-                            <form>
-                                <a href=# id=test><button class="button button1" style="height:300px; width:300px; cursor: pointer;"><b>H</b><sub><b>2</b></sub><b>O</b></button></a>
-                            </form>
-                    
-                    </div>
-
-            </div>
-
+  <div class="d-flex align-items-center justify-content-center justify-self-center flex-fill">
+    <div class="circle position-relative d-flex align-items-center justify-content-center">
+      <div class="circle transform position-absolute">
+        <div class="circle1 align-items-center d-flex justify-content-center">
+          <div class="circle2 align-items-center d-flex justify-content-center">
+          </div>
         </div>
-        
-    </body>
-</html>
+
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="160px" height="160px">
+          <defs>
+            <linearGradient id="GradientColor">
+              <stop offset="0%" stop-color="#1ee99b" />
+              <stop offset="100%" stop-color="#2c60db" />
+            </linearGradient>
+          </defs>
+          <circle id="circle" cx="80" cy="80" r="70" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <div class="position-relative d-flex align-items-center justify-content-center flex-column">
+        <h5 class="m-0">Last Watered:</h5>
+        <p class="m-0">2 hours ago</p>
+      </div>
+    </div>
+
+    <script>
+      const circle = document.getElementById("circle");
+      const percent = 76;
+      circle.style = "stroke-dashoffset: " + ((100 - percent) * (472 - 34) / 100 + 34);
+    </script>
+  </div>
+</div>
+
+{% endblock body %}

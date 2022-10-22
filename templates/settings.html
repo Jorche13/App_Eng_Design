@@ -1,70 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Irrigator Manuel</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"></link>
-        
-    </head>
-    <body>
-        <div class="main">
+{% extends "base.html" %}
 
-            <div class="menu">
+{% block body %}
+{{ super() }}
 
-                <a href="{{ url_for('index') }}">Home &#9751;</a>
-                <a href="{{ url_for('forecast') }}">Current Forecast &#9728;</a>
-                <a href="{{ url_for('settings') }}">Settings &#9881;</a>
-                <a href="{{ url_for('override') }}">Water Now &#9730;</a>
+<h1 class="pb-3">Settings</h1>
 
-            </div>
 
-            <div class="body">
 
-                <h2>Welcome to the settings menu</h2>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h3 style="text-align: left; margin-left: 100px;">Set watering treshold manually</h3>
-                <br>
-                <p>Minimal moisture treshold:</p>
-                <br>
-                <!--<form action="/set_treshold" method="post">
-                    <label style="text-align: right;">Minimal moisture treshold:</label>
-                    <input type="text" name="number">
-                    <input type="submit" value="click">
-                    
-                    <p style="text-align: center;">Current moisture treshold is set to 
-                        {% if number %}
-                        {{ number }}
-                        {% else %}
-                        {{ initial_treshold }}
-                        {% endif %}
-                    </p>-->
-                
-                <form action="/display" method="get" enctype="multipart/form-data">
-                    <!--<label style="text-align: right;">Minimal moisture treshold:</label>
-                    <input type="text" name="number">
-                    <input type="submit" value="click">-->
-                    <input type="submit" value="press to get string_from_jojo" name="action1"/>
-                    {{ string_from_jojo }}
-
-                </form>
-
-                <p>here a field will be put to read the number posted and send it to the terminal</p>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h3 style="text-align: left; margin-left: 100px;">Set water amount per irrigation</h3>
-                <br>
-                <p>here a slider with low-mid-high will be placed and data will be again sent to the terminal</p>
-
-            </div>
-
-        </div>
-        
-    </body>
-</html>
+<form method="post">
+    <ul class="list-group list-group-light">
+        <li class="list-group-item">
+            <label for="threshold" class="form-label">Moisture Threshold:</label>
+            <input class="form-range" type="range" min="0" max="100" value="{{threshold}}" name="threshold">
+        </li>
+        <li class="list-group-item">
+            <label for="water-amount" class="form-label">Amount of Water:</label>
+            <input type="range" class="form-range" min="0" max="100" value="{{water_amount}}" name="water-amount">
+        </li>
+        <button class="btn btn-success" type="submit">Apply</button>
+    </ul>
+</form>
+{% endblock body %}

@@ -1,45 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Irrigator Manuel</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"></link>
-        
-    </head>
-    <body>
-        <div class="main">
+{% extends "base.html" %}
+{% block body %}
+{{ super() }}
 
-            <div class="menu">
+<h1>ManueX</h1>
 
-                <a href="{{ url_for('index') }}">Home &#9751;</a>
-                <a href="{{ url_for('forecast') }}">Current Forecast &#9728;</a>
-                <a href="{{ url_for('settings') }}">Settings &#9881;</a>
-                <a href="{{ url_for('override') }}">Water Now &#9730;</a>
+<p><u>ManueX</u> is the first ever smart irrigator system for green facades that uses both real-time<br>
+    weather API and sensor data. Thanks to the access to that data, it is able to, with great<br>
+    precision, predict the need of the green facade to be watered with an algorithm. In the end, ManueX<br>
+    also connects to a microcontroller and waters the system. On the left there is a menu that links<br>
+    towards functions like checking the current weather forecast, observing the humidity sensor data,<br>
+    setting the watering conditions and, last but not least, an override button that waters the plant<br>
+    instantly.</p>
 
-            </div>
-
-            <div class="body">
-
-                <h1>ManueX</h1>
-
-                <br>
-                <br>
-                <br>
-                <br>
-
-                <p><u>ManueX</u> is the first ever smart irrigator system for green facades that uses both real-time<br>
-                weather API and sensor data. Thanks to the access to that data, it is able to, with great<br>
-                precision, predict the need of the green facade to be watered with an algorithm. In the end, ManueX<br>
-                also connects to a microcontroller and waters the system. On the left there is a menu that links<br>
-                towards functions like checking the current weather forecast, observing the humidity sensor data,<br>
-                setting the watering conditions and, last but not least, an override button that waters the plant<br>
-                instantly.</p>
-
-            </div>
-
-        </div>
-        
-    </body>
-</html>
+{% endblock %}
