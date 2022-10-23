@@ -1,34 +1,34 @@
-import time
-from weather import *
-#default time for running the pump in seconds
+from time import sleep
+from weather import DataPoint
+
+# default time for running the pump in seconds
 water_time = 10
 
-#default moisture threshold
+# default moisture threshold
 threshold_moisture = 45
 
-#value for testing 
+# value for testing
 dummy_value = 30
 
-def waternow(timer):
 
+def waternow(timer):
     print("Hermano Manuex riega tus plantas! Manuex es genial")
 
+
 def run():
-
-    while(1):
-
+    while(True):
         b = DataPoint()
-        if decide(b) == True:
-            #the code decided that water is needed, water the plants
-            waternow(water_time)   
+        if decide(b):
+            # the code decided that water is needed, water the plants
+            waternow(water_time)
         else:
             print("Your plants are moist <3")
-        
-        #make thread sleep for five minutes 
-        time.sleep(300)
+
+        # make thread sleep for five minutes
+        sleep(300)
 
 
-#deciding wheter plants need water
+# deciding wheter plants need water
 def decide(b: DataPoint):
     current_moisture = dummy_value
     rain_val = b.get_rain_three_hours()
@@ -41,9 +41,3 @@ def decide(b: DataPoint):
         if temp_val > 30:
             if rain_val < 0.7 and current_moisture < 60:
                 waternow(water_time)
-            
-
-
-
-
-    

@@ -1,38 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Irrigator Manuel</title>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"></link>
-        
-    </head>
-    <body>
-        <div class="main">
+{% extends "base.html" %}
+{% block body %}
+{{ super() }}
 
-            <div class="menu">
+<h1>Forecast for the next {{data.count*3}} hours</h1>
+<div class="row row-cols-1 row-cols-md-2 g-4 text-center">
+    {% for time_step in data.forecast.data %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <h3>{{time_step.dt.strftime("%A %d")}}</h3>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <h3>{{time_step.dt.strftime("%H:%M h")}}</h3>
+                    </div>
+                </div>
 
-                <a href="{{ url_for('index') }}">Home &#9751;</a>
-                <a href="{{ url_for('forecast') }}">Current Forecast &#9728;</a>
-                <a href="{{ url_for('settings') }}">Settings &#9881;</a>
-                <a href="{{ url_for('override') }}">Water Now &#9730;</a>
+                <img src="/static/images/{{time_step.icon}}.png" class="card-img-top w-25">
+                <h3 class="fw-bold">{{time_step.description.title()}}</h3>
+                {% if time_step.rain_three_hours %}
+                <h5>{{time_step.rain_three_hours}} mm in last 3 hours</h5>
+                {% else %}
+                <h5>No rain forecast</h5>
+                {% endif %}
 
+                <div class="row">
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <h3 class="fw-bold">{{time_step.temp}}
+                            <h3><sup>°C</sup></h3>
+                        </h3>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-center">
+                        <h3 class="fw-bold">{{time_step.humidity}}
+                            <h3><sup>%</sup></h3>
+                        </h3>
+                    </div>
+                </div>
             </div>
-
-            <div class="body">
-
-                <img src="{{ user_image }}" alt="Weather forecast" width="750" height="250">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h3>ManueX will water your plant in: </h3>
-
-            </div>
-
         </div>
-        
-    </body>
-</html>
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}

@@ -1,7 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict, List
-import requests
-from requests import ConnectionError
+from requests import get, ConnectionError
 
 
 class DataPoint:
@@ -19,14 +18,6 @@ class DataPoint:
     city_name: str
     rain_last_hour: float
     rain_three_hours: float
-
-    def get_temp(self):
-        rt = self.temp
-        return rt
-    
-    def get_rain_three_hours(self): 
-        rt = self.rain_three_hours
-        return rt
 
     def __init__(self, json: Dict[str, Any]) -> None:
         """Not all of the attributes are always present in the data.
@@ -82,6 +73,9 @@ class WeatherAPI:
 
         Args:
             location_name (str): Name of the location to get weather for
+            api_key (str): OpenWeatherMap API key
+            units(str) [Optioanl]: Units of the weather data. Default is metric
+            count (int) [Optional]: Number of time steps in the forecast. Default is 8 (24 hours)
 
         Errors:
             ValueError: If the response from the API is not valid
@@ -112,11 +106,11 @@ class WeatherAPI:
             ValueError: If the response from the API is not valid
         """
         try:
-            current = requests.get(
+            current = get(
                 f'https://api.openweathermap.org/data/2.5/weather?q={location_name}&appid={api_key}&units={units}', timeout=5)
-            forecast = requests.get(
+            forecast = get(
                 f'https://api.openweathermap.org/data/2.5/forecast?q={location_name}&appid={api_key}&units={units}&cnt={count}', timeout=5)
-        except ConnectionError as ex:
+        except ConnectionError:
             raise
 
         current_json = current.json()

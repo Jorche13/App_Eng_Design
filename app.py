@@ -1,83 +1,72 @@
-from warnings import catch_warnings
+from datetime import datetime
 from flask import Flask, render_template, url_for, request, redirect
 import os
-import weather  # This is the import for the weather module
-from dateutil import tz  # Time zone utility
+import weather
 
 UPLOAD_FOLDER = os.path.join('static', 'css')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-initial_treshold = 10
+# Ideally this should be in a file or database
+threshold: int = 75
+water_amount: int = 25
+location = 'Eindhoven'
+
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/forecast')
 def forecast():
+    global location
+
     try:
-        data = weather.WeatherAPI(
-            'Eindhoven', '2096fe218663d046a3a37855c4aea57f')
+        data = weather.WeatherAPI(location, '2096fe218663d046a3a37855c4aea57f')
+
     except (ValueError, ConnectionError):
-        # These are the two errors that can be raised by the weather constructor
-        # You could also return a error page here in the case something goes wrong
-        # I also hardcoded the data here but you can make it with user input
-        # I also tire to document it as much as possible so just reference the popups in VSCode
-        # or go to the weather.py file and check the docstrings
+        return render_template('error.html')
 
-        # return render_template('error.html')
-        pass
-    
-    full_filename = os.path.join(app.config['UPLOAD_FOLDER'], 'latest_forecast.png')
-    return render_template('forecast.html', user_image = full_filename)
+    full_filename = os.path.join(
+        app.config['UPLOAD_FOLDER'], 'latest_forecast.png')
+    return render_template('forecast.html', user_image=full_filename, data=data)
 
-@app.route('/settings')
+
+@app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    return render_template('settings.html')
+    global threshold
+    global water_amount
+    global location
 
-@app.route('/set_treshold', methods=['POST', 'GET'])
-def set_treshold():
-    global initial_treshold
-    output = request.form.to_dict()
-    number = output['number']
-    if number:
-        initial_treshold = number
-    return render_template('settings.html', number=number, initial_treshold=initial_treshold)
+    print(threshold, water_amount)
 
-@app.route('/display', methods = ['GET'])
+    if request.method == 'POST':
+        location = request.form["location"]
+        threshold = request.form["threshold"]
+        water_amount = request.form["water-amount"]
+
+    return render_template('settings.html', threshold=threshold, water_amount=water_amount, location=location)
+
+
+@app.route('/base', methods=['POST'])
 def display():
     string_from_jojo = request.get_data()
     print(string_from_jojo)
     return render_template('settings.html', string_from_jojo=string_from_jojo)
 
-#accesses the override webpage - should be an okay html template
+
 @app.route('/override')
 def override():
-    #if request.method == 'POST':
-       # if request.form.get('action') == 'VALUE':
-           # pass
+    last_watered = datetime.now()
 
-       # else:
-         #   pass
+    if request.method == 'POST':
+        if request.form.get('action') == 'VALUE':
+            pass
 
-   # elif request.method == 'GET':
-      #  return render_template('override.html')
+    return render_template('override.html', last_watered=last_watered)
 
-    return render_template('override.html')
-
-#Uses the overriding button to execute a function in the terminal, namely printing Hello
-@app.route('/background_process_test')
-def background_process_test():
-    print ("Hello")
-    return ("nothing")
-
-#@app.route('/static/css/latest_forecast.png')
-#def latest_event():
-    #return send_from_directory(os.path.join(app.root_path, 'static'), 'latest_forecast.png', mimetype='image/png')
-
-app.run(host = '0.0.0.0', port = 5000)
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
