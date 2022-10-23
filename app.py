@@ -8,9 +8,10 @@ UPLOAD_FOLDER = os.path.join('static', 'css')
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
+# Ideally this should be in a file or database
 threshold: int = 75
 water_amount: int = 25
+location = 'Eindhoven'
 
 
 @app.route('/')
@@ -20,9 +21,10 @@ def index():
 
 @app.route('/forecast')
 def forecast():
+    global location
+
     try:
-        data = weather.WeatherAPI(
-            'xxx', '2096fe218663d046a3a37855c4aea57f', count=8)
+        data = weather.WeatherAPI(location, '2096fe218663d046a3a37855c4aea57f')
 
     except (ValueError, ConnectionError):
         return render_template('error.html')
@@ -36,14 +38,16 @@ def forecast():
 def settings():
     global threshold
     global water_amount
+    global location
 
     print(threshold, water_amount)
 
     if request.method == 'POST':
+        location = request.form["location"]
         threshold = request.form["threshold"]
         water_amount = request.form["water-amount"]
 
-    return render_template('settings.html', threshold=threshold, water_amount=water_amount)
+    return render_template('settings.html', threshold=threshold, water_amount=water_amount, location=location)
 
 
 @app.route('/base', methods=['POST'])
