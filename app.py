@@ -1,37 +1,37 @@
 from datetime import datetime
 from flask import Flask, render_template, url_for, request, redirect
-import os
 import weather
-
-UPLOAD_FOLDER = os.path.join('static', 'css')
+import controller
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ideally this should be in a file or database
-threshold: int = 75
-water_amount: int = 25
-location = 'Eindhoven'
+threshold: int = 45
+water_amount: int = 50
+location: str = 'Eindhoven'
+sensor_moisture = 0
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    global location
+    try:
+        weather_data.update(location)
+    except (ValueError, ConnectionError) as ex:
+        return render_template('error.html', error=ex)
+
+    return render_template('index.html', data=weather_data, sensor_moisture=sensor_moisture)
 
 
 @app.route('/forecast')
 def forecast():
     global location
-
     try:
-        data = weather.WeatherAPI(location, '2096fe218663d046a3a37855c4aea57f')
+        weather_data.update(location)
+    except (ValueError, ConnectionError) as ex:
+        return render_template('error.html', error=ex)
 
-    except (ValueError, ConnectionError):
-        return render_template('error.html')
-
-    full_filename = os.path.join(
-        app.config['UPLOAD_FOLDER'], 'latest_forecast.png')
-    return render_template('forecast.html', user_image=full_filename, data=data)
+    return render_template('forecast.html', data=weather_data)
 
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -52,9 +52,11 @@ def settings():
 
 @app.route('/base', methods=['POST'])
 def display():
-    string_from_jojo = request.get_data()
-    print(string_from_jojo)
-    return render_template('settings.html', string_from_jojo=string_from_jojo)
+    global sensor_moisture
+
+    sensor_moisture = request.get_data()
+    weather_data.update(location)
+    return controller.make_decision(weather_data.forecast, sensor_moisture, threshold)
 
 
 @app.route('/override')
@@ -69,4 +71,12 @@ def override():
 
 
 if __name__ == "__main__":
+    try:
+        weather_data = weather.WeatherAPI(
+            location, '2096fe218663d046a3a37855c4aea57f')
+    except (ValueError, ConnectionError) as ex:
+        print('Cannot start application')
+        print(ex)
+        exit()
+
     app.run(host='0.0.0.0', port=5000, debug=False)

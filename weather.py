@@ -85,11 +85,11 @@ class WeatherAPI:
         self.api_key = api_key
         self.units = units
         self.count = count
-        self.update()
+        self.update(self.location_name)
 
-    def update(self) -> None:
+    def update(self, location: str) -> None:
         """Updates the current weather and forecast data."""
-        self.get_weather(self.location_name, self.api_key,
+        self.get_weather(location, self.api_key,
                          self.units, self.count)
 
     def get_weather(self, location_name: str, api_key: str, units: str, count) -> None:
