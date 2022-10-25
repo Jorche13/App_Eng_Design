@@ -2,7 +2,7 @@
 {% block body %}
 {{ super() }}
 
-<h1 class="text-center">Forecast for the next {{data.count*3}} hours</h1>
+<h1 class="text-center mb-4">Forecast for the next {{data.count*3}} hours</h1>
 
 <div class="row row-cols-1 row-cols-md-2 g-4 text-center">
     {% for time_step in data.forecast.data %}

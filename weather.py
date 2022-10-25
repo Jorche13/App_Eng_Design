@@ -1,4 +1,5 @@
 from datetime import datetime
+import math
 from typing import Any, Dict, List
 from requests import get, ConnectionError
 
@@ -30,8 +31,8 @@ class DataPoint:
             None
         """
         self.dt = datetime.fromtimestamp(json['dt'])
-        self.temp = json.get('main', {})['temp']
-        self.humidity = json.get('main', {})['humidity']
+        self.temp = round(json.get('main', -99)['temp'], 1)
+        self.humidity = json.get('main', -99)['humidity']
         self.id = json.get('weather', [])[0]['id']
         self.description = json.get('weather', [])[0]['description']
         self.icon = json.get('weather', [])[0]['icon']
@@ -118,9 +119,9 @@ class WeatherAPI:
 
         if not current_json or not forecast_json or current_json['cod'] != 200 or forecast_json['cod'] != '200':
             raise ValueError(
-                f"""One or more of the jason responses is not valid. They are not with response code 200.
-                    Current response code: {current_json.get('cod', 'json is empty')}
-                    Forecast response code: {forecast_json.get('cod', 'json is empty')}""")
+                f"""One or more of the jason responses is not valid.
+Current response code: {current_json.get('cod', 'json is empty')}
+Forecast response code: {forecast_json.get('cod', 'json is empty')}""")
 
         self.current = DataPoint(current_json)
         self.forecast = Forecast(forecast_json)

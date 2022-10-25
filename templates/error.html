@@ -2,7 +2,13 @@
 {% block body %}
 {{ super() }}
 
-<h1 class="fw-bold text-danger text-center">one or more errors occurred</h1>
-<p class="text-center">error</p>
+
+<div class="text-center">
+    <img class="w-25 p-3" src="/static/images/error.png" /><br>
+    <h1 class="fw-bold text-danger text-center">An error has occured</h1>
+    <p class="text-center">{{error}}</p><br>
+    <p>The location you are looking for was not found. Please try changing the location.</p>
+
+</div>
 
 {% endblock %}
