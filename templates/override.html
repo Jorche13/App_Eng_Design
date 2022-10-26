@@ -4,7 +4,7 @@
 {{ super() }}
 
 <div class="d-flex flex-column h-100">
-  <h1>Manual Control</h1>
+  <h1 class="text-center">Manual Control</h1>
 
   <div class="d-flex align-items-center justify-content-center justify-self-center flex-fill">
     <div class="circle position-relative d-flex align-items-center justify-content-center">
@@ -17,8 +17,8 @@
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="160px" height="160px">
           <defs>
             <linearGradient id="GradientColor">
-              <stop offset="0%" stop-color="#1ee99b" />
-              <stop offset="100%" stop-color="#2c60db" />
+              <stop offset="0%" stop-color="#2c60db" />
+              <stop offset="100%" stop-color="#F47174" />
             </linearGradient>
           </defs>
           <circle id="circle" cx="80" cy="80" r="70" stroke-linecap="round" />
@@ -26,17 +26,29 @@
       </div>
 
       <div class="position-relative d-flex align-items-center justify-content-center flex-column">
-        <h5 class="m-0">Last Watered:</h5>
-        <p class="m-0">{{last_watered}}</p>
+        <h5 class="m-0 text-center">Plant humidity:</h5>
+        {% if current_moisture == -99 %}
+        <h2 class="m-0 text-center fw-bolder">unavailable</h2>
+        {% else %}
+        <h2 class="m-0 text-center fw-bolder">{{current_moisture}}%</h2>
+        {% endif %}
+        <h5 class="m-0 text-center mt-3">Last watered:</h5>
+        <h2 class="m-0 text-center fw-bolder">{{last_watered.strftime("%d/%m/%Y %H:%M:%S")}}</h2>
       </div>
     </div>
 
     <script>
       const circle = document.getElementById("circle");
-      const percent = 76;
+      const percent = '{{current_moisture}}';
       circle.style = "stroke-dashoffset: " + ((100 - percent) * (472 - 34) / 100 + 34);
     </script>
   </div>
+
+  <form method="post">
+    <div class="d-flex flex-column justify-content-center">
+      <button class="btn btn-lg btn-success">Water now</button>
+    </div>
+  </form>
 </div>
 
 {% endblock body %}
